@@ -1,4 +1,6 @@
-use ahash::{AHashMap, AHashSet};
+use ahash::RandomState;
+use rkyv::{Archive, Deserialize, Serialize};
+use std::collections::HashMap;
 use std::path::PathBuf;
 
 mod index;
@@ -6,41 +8,30 @@ mod init;
 mod search;
 mod write;
 
-type Table = Vec<Row>;
-type Row = Vec<String>;
-struct SqlItems {
-    indexs: AHashMap<String, Vec<u64>>,
+pub type IndexMap = HashMap<String, Vec<u64>, RandomState>;
+
+#[derive(Archive, Deserialize, Serialize, Debug, PartialEq)]
+pub struct Table(Vec<Vec<String>>);
+
+pub struct SqlItems {
+    indexs: IndexMap,
     items: Vec<Table>,
     path: PathBuf,
 }
 impl SqlItems {
     pub fn new() {}
-    pub fn init(path: impl Into<PathBuf>) -> Self {
-        Self {
-            indexs: (),
-            items: (),
-            path: path.into(),
-        }
-    }
     pub fn add() {}
     pub fn remove() {}
     pub fn insert() {}
 }
 
 struct NosqlItems {
-    indexs: AHashMap<String, Vec<u64>>,
+    indexs: IndexMap,
     items: Vec<Table>,
     path: PathBuf,
 }
 impl NosqlItems {
     pub fn new() {}
-    pub fn init(path: impl Into<PathBuf>) -> Self {
-        Self {
-            indexs: (),
-            items: (),
-            path: path.into(),
-        }
-    }
     pub fn add() {}
     pub fn remove() {}
     pub fn insert() {}
