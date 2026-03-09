@@ -3,21 +3,21 @@ use rkyv::to_bytes;
 use std::io::{BufWriter, Write};
 use std::{collections::HashMap, fs::File, path::PathBuf};
 
-pub fn new_item(path: PathBuf) -> Vec<Table> {
-    let file = File::create(&path).expect("Create new item failed.");
+pub fn new_item(path: PathBuf) -> Result<Vec<Table>, Box<dyn std::error::Error>> {
+    let file = File::create(&path)?;
     let new_item = Vec::new();
-    let bytes = to_bytes::<rkyv::rancor::Error>(&new_item).expect("Serialization failed.");
+    let bytes = to_bytes::<rkyv::rancor::Error>(&new_item)?;
     let mut writer = BufWriter::new(file);
-    writer.write_all(&bytes).expect("Write failed.");
-    writer.flush().expect("Flush failed.");
-    new_item
+    writer.write_all(&bytes)?;
+    writer.flush()?;
+    Ok(new_item)
 }
-pub fn new_index(path: PathBuf) -> IndexMap {
-    let file = File::create(&path).expect("Create new item failed.");
+pub fn new_index(path: PathBuf) -> Result<IndexMap, Box<dyn std::error::Error>> {
+    let file = File::create(&path)?;
     let new_index = HashMap::with_hasher(ahash::RandomState::default());
-    let bytes = to_bytes::<rkyv::rancor::Error>(&new_index).expect("Serialization failed.");
+    let bytes = to_bytes::<rkyv::rancor::Error>(&new_index)?;
     let mut writer = BufWriter::new(file);
-    writer.write_all(&bytes).expect("Write failed.");
-    writer.flush().expect("Flush failed.");
-    new_index
+    writer.write_all(&bytes)?;
+    writer.flush()?;
+    Ok(new_index)
 }
