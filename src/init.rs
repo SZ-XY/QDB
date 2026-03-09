@@ -1,11 +1,12 @@
+use crate::new::{new_index, new_item};
 use crate::{IndexMap, NosqlItems, SqlItems, Table};
 use rkyv::api::low::from_bytes;
 use rkyv::rancor::Error;
-use std::collections::HashMap;
 use std::io::Read;
 use std::{fs::File, path::PathBuf};
 
 impl SqlItems {
+    #[allow(dead_code)]
     pub fn init(path: impl Into<PathBuf>) -> Self {
         let path = path.into();
         let item_path = path.join("items");
@@ -18,6 +19,7 @@ impl SqlItems {
     }
 }
 impl NosqlItems {
+    #[allow(dead_code)]
     pub fn init(path: impl Into<PathBuf>) -> Self {
         let path = path.into();
         let item_path = path.join("items");
@@ -38,7 +40,7 @@ fn init_items(path: PathBuf) -> Vec<Table> {
             from_bytes::<Vec<Table>, Error>(&bytes[..]).unwrap()
             //access::<ArchivedVec<ArchivedTable>, Error>(&bytes[..]).unwrap()
         }
-        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Vec::new(),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => new_item(path),
         Err(e) => panic!("Open items failed: {}", e),
     }
 }
@@ -49,9 +51,7 @@ fn init_indexs(path: PathBuf) -> IndexMap {
             file.read_to_end(&mut bytes).expect("Read indexs failed.");
             from_bytes::<IndexMap, Error>(&bytes[..]).unwrap()
         }
-        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
-            HashMap::with_hasher(ahash::RandomState::default())
-        }
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => new_index(path),
         Err(e) => panic!("Open indexs failed: {}", e),
     }
 }

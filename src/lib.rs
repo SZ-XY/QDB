@@ -5,6 +5,7 @@ use std::path::PathBuf;
 
 mod index;
 mod init;
+mod new;
 mod search;
 mod write;
 
