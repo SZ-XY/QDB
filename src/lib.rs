@@ -8,7 +8,7 @@ mod new;
 mod search;
 mod write;
 
-pub type IndexMap = HashMap<String, Vec<u64>, RandomState>;
+pub type IndexMap = HashMap<String, Vec<u32>, RandomState>;
 
 //#[derive(Archive, Deserialize, Serialize, Debug, PartialEq)]
 pub type Table = Vec<Vec<String>>;
@@ -17,7 +17,7 @@ pub struct SqlItems {
     indexs: Vec<IndexMap>,
     items: Vec<Table>,
     path: PathBuf,
-    sql_db_index: Vec<u64>,
+    sql_db_index: Vec<u32>,
 }
 impl SqlItems {
     pub fn add() {}
@@ -29,7 +29,7 @@ struct NosqlItems {
     indexs: Vec<IndexMap>,
     items: Vec<Table>,
     path: PathBuf,
-    nosql_db_index: Vec<u64>,
+    nosql_db_index: Vec<u32>,
 }
 impl NosqlItems {
     pub fn add() {}
